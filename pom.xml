@@ -35,6 +35,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.dorkbox</groupId>
+            <artifactId>Notify</artifactId>
+            <version>3.7</version>
+        </dependency>
+
     </dependencies>
 
     <build>
