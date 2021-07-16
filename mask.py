@@ -66,7 +66,8 @@ def mask_image(image, id):
 
 
 pic_path = ['-i']
-pic_path.append(sys.argv[1])
+pic_path.append(str(sys.argv[1]))
+print(pic_path)
 result = mask_image(image=pic_path, id=datetime.datetime.now())
 if (result == "No Mask"):
     print(False)
