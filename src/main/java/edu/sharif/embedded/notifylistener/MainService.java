@@ -36,7 +36,7 @@ public class MainService {
             log.info("File {} is saved", file.getOriginalFilename());
             String fileName = file.getOriginalFilename();
             String time = fileName.substring(fileName.lastIndexOf("-") + 1, fileName.indexOf("."));
-            if (isOk(target.toString())){
+            if (isOk(target.toString())) {
                 return true;
             } else {
                 NotificationUtil.showNotification(target.toString(), time);
@@ -52,7 +52,12 @@ public class MainService {
         Optional<List<String>> results = PythonUtil.runPython(pyFile, imgFile);
         if (results.isPresent()) {
             List<String> stringResults = results.get();
-            return Boolean.parseBoolean(stringResults.get(stringResults.size() - 1));
+            try {
+                return Boolean.parseBoolean(stringResults.get(stringResults.size() - 1));
+            } catch (Exception e) {
+                log.error("Failed to parse boolean");
+                return true;
+            }
         } else {
             log.warn("process failed");
             return true;

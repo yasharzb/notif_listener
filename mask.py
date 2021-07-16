@@ -21,7 +21,6 @@ def mask_image(image, id):
                     help="path to trained face mask detector model")
     ap.add_argument("-c", "--confidence", type=float, default=0.5,
                     help="minimum probability to filter weak detections")
-    print("here")
     args = vars(ap.parse_args())
     prototxtPath = os.path.sep.join([args["face"], "deploy.prototxt"])
     weightsPath = os.path.sep.join([args["face"],
