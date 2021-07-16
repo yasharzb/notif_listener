@@ -23,6 +23,7 @@ public final class PythonUtil {
             Process process = processBuilder.start();
             List<String> results = new BufferedReader(new InputStreamReader(process.getInputStream())).lines()
                     .collect(Collectors.toList());
+            log.info(Arrays.toString(results.toArray()));
             int exitCode = process.waitFor();
             assert exitCode == 0;
             return Optional.of(results);
