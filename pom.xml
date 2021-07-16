@@ -10,7 +10,7 @@
     </parent>
     <groupId>edu.sharif.embedded</groupId>
     <artifactId>notify-listener</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>notify-listener</name>
     <description>Notify listener for subway system mask detector</description>
     <properties>

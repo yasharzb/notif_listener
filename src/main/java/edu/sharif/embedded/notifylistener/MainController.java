@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @Slf4j
 public class MainController {
@@ -17,11 +19,14 @@ public class MainController {
     private MainService mainService;
 
     @PostMapping("/pic")
-    public ResponseEntity<Void> receivePic(@RequestParam("pic_file") MultipartFile file) {
+    public ResponseEntity<Boolean> receivePic(@RequestParam("pic_file") MultipartFile file) {
         log.info("File name: {}", file.getName());
-        if (mainService.storeFile(file))
-            return ResponseEntity.status(HttpStatus.OK).build();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        try {
+            Boolean result = mainService.storeFile(file);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/start")

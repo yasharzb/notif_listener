@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -19,23 +21,41 @@ public class MainService {
     @Value(value = "${image-browser}")
     private String imageBrowser;
 
+    @Value(value = "${py-file}")
+    private String pyFile;
+
     @PostConstruct
     public void init() {
         NotificationUtil.setImageBrowser(imageBrowser);
     }
 
-    public boolean storeFile(MultipartFile file) {
+    public boolean storeFile(MultipartFile file) throws IOException {
         Path target = Path.of(file.getOriginalFilename());
         try {
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
             log.info("File {} is saved", file.getOriginalFilename());
             String fileName = file.getOriginalFilename();
             String time = fileName.substring(fileName.lastIndexOf("-") + 1, fileName.indexOf("."));
-            NotificationUtil.showNotification(target.toString(), time);
-            return true;
+            if (isOk(target.toString())){
+                return true;
+            } else {
+                NotificationUtil.showNotification(target.toString(), time);
+                return false;
+            }
         } catch (IOException e) {
             log.error("Failed to save file");
-            return false;
+            throw new IOException();
+        }
+    }
+
+    private boolean isOk(String imgFile) {
+        Optional<List<String>> results = PythonUtil.runPython(pyFile, imgFile);
+        if (results.isPresent()) {
+            List<String> stringResults = results.get();
+            return Boolean.parseBoolean(stringResults.get(stringResults.size() - 1));
+        } else {
+            log.warn("process failed");
+            return true;
         }
     }
 }
